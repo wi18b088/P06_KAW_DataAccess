@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "P06_KAW_DataAccess.App1", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "P06_KAW_DataAccess.App2", "P06_KAW_DataAccess.App2\P06_KAW_DataAccess.App2.csproj", "{35D1D3AC-06B8-4EEC-B28F-D279854815AB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "P06_KAW_DataAccess.Common", "P06_KAW_DataAccess.Common\P06_KAW_DataAccess.Common.csproj", "{6F12D322-0846-46E3-AEC3-ED4E61A3440E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{35D1D3AC-06B8-4EEC-B28F-D279854815AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35D1D3AC-06B8-4EEC-B28F-D279854815AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35D1D3AC-06B8-4EEC-B28F-D279854815AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F12D322-0846-46E3-AEC3-ED4E61A3440E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F12D322-0846-46E3-AEC3-ED4E61A3440E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F12D322-0846-46E3-AEC3-ED4E61A3440E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F12D322-0846-46E3-AEC3-ED4E61A3440E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

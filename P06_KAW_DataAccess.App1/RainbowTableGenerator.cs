@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using Npgsql;
+using P06_KAW_DataAccess.Common;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -41,15 +42,10 @@ namespace P06_KAW_DataAccess.App1
             Stopwatch stopwatch = new Stopwatch();
 
             // Create Connection String
-            NpgsqlConnectionStringBuilder builder = new NpgsqlConnectionStringBuilder();
-            builder.Host = "localhost";
-            builder.Port = 5432;
-            builder.Username = "postgres";
-            builder.Database = "postgres";
-            builder.ApplicationName = "RainbowTableMD5";
+            var cConf = new ConnectionConfig();
 
             // Connect to DB
-            using NpgsqlConnection connection = new NpgsqlConnection(builder.ToString());
+            using NpgsqlConnection connection = new NpgsqlConnection(cConf.ConnectionString);
             connection.Open();
 
             // Create Table
@@ -67,7 +63,7 @@ namespace P06_KAW_DataAccess.App1
             {
                 // i is from, hashCount/threadCount is to
                 int to = i + hashCount / threadCount;
-                Thread thread = new Thread(() => MainPerThread(i, to, builder.ToString()));
+                Thread thread = new Thread(() => MainPerThread(i, to, cConf.ConnectionString));
                 thread.Start();
                 threads.Add(thread);
                 Console.WriteLine($"Form {i} to {to-1}");
@@ -92,6 +88,7 @@ namespace P06_KAW_DataAccess.App1
         static void MainPerThread(int from, int to, string cstring)
         {
             var mD5 = MD5.Create();
+            var MD5Gen = new GenerateMD5();
             using NpgsqlConnection tconnection = new NpgsqlConnection(cstring);
             tconnection.Open();
             for (int i = from; i < to; i++)
@@ -99,7 +96,7 @@ namespace P06_KAW_DataAccess.App1
                 //tconnection.Execute("INSERT INTO test (number) VALUES (@p)", new { p = GetMd5Hash(mD5, i.ToString()) });
 
                 //Console.WriteLine($"# {i}");
-                tconnection.Execute("INSERT INTO hashes (number, hash) VALUES (@p,@q)", new { p = i, q = GetMd5Hash(mD5, i.ToString()) });
+                tconnection.Execute("INSERT INTO hashes (number, hash) VALUES (@p,@q)", new { p = i, q = MD5Gen.GetMd5Hash(mD5, i.ToString()) });
                 /*
                 if (i % 100000 == 0)
                 {
@@ -108,27 +105,6 @@ namespace P06_KAW_DataAccess.App1
                 */
                 //break;
             }
-        }
-
-        static string GetMd5Hash(MD5 md5Hash, string input)
-        {
-
-            // Convert the input string to a byte array and compute the hash.
-            byte[] data = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(input));
-
-            // Create a new Stringbuilder to collect the bytes
-            // and create a string.
-            StringBuilder sBuilder = new StringBuilder();
-
-            // Loop through each byte of the hashed data 
-            // and format each one as a hexadecimal string.
-            for (int i = 0; i < data.Length; i++)
-            {
-                sBuilder.Append(data[i].ToString("x2"));
-            }
-
-            // Return the hexadecimal string.
-            return sBuilder.ToString();
         }
     }
 }
