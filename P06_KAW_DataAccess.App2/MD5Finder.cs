@@ -57,6 +57,7 @@ namespace P06_KAW_DataAccess.App2
                 stopwatch.Stop();
                 stat.Found = true;
                 Console.WriteLine("Found value in Lookup Table!");
+                stat.LookupTime = Convert.ToInt32(stopwatch.Elapsed.TotalMilliseconds);
                 UpdateStatsTable(stat, connection);
             }
             else
@@ -73,7 +74,40 @@ namespace P06_KAW_DataAccess.App2
 
         private static void UpdateStatsTable(StatLocal stat, NpgsqlConnection connection)
         {
+            if (!stat.Found)
+            {
+                return;
+            }
+            // Get Stat Model from database
+            var statModelList = connection.Query<StatDBModel>("SELECT * FROM stats_table WHERE input = @p", new { p = stat.Input }).ToList();
 
+            // Check if there is an entry already
+            if (statModelList.Count > 0)
+            {
+                // Check if there is a new best time
+                if (stat.LookupTime < statModelList[0].Best_time)
+                {
+                    // Update Entry, Change Last Test, increment count
+                    // Update besttime
+                    connection.Execute("UPDATE stats_table SET last_test = @lt, best_time = @bt, test_count = @tc WHERE input = @i",
+                        new { lt = stat.LastTest, bt = stat.LookupTime, tc = ++statModelList[0].Test_count, i = stat.Input }
+                        );
+                }
+                else
+                {
+                    // Update Entry, Change Last Test, increment count
+                    connection.Execute("UPDATE stats_table SET last_test = @lt, test_count = @tc WHERE input = @i",
+                        new { lt = stat.LastTest, tc = ++statModelList[0].Test_count, i = stat.Input }
+                        );
+                }
+            }
+            else
+            {
+                // Create Stat Entry
+                connection.Execute("INSERT INTO stats_table VALUES (@i, @r, @ft, @lt, @bt, @c)",
+                    new { i = stat.Input, r = stat.Result, ft = stat.LastTest, lt = stat.LastTest, bt = stat.LookupTime, c = 1 }
+                    );
+            }
         }
     }
 }
