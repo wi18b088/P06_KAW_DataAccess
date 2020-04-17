@@ -4,7 +4,7 @@ using System.Text;
 
 namespace P06_KAW_DataAccess.App2
 {
-    public class Stat
+    public class StatDBModel
     {
         public int Input { get; set; }
         public string Result { get; set; }
