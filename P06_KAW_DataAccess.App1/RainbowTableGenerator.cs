@@ -36,7 +36,8 @@ namespace P06_KAW_DataAccess.App1
         {
             // Config
             int hashCount = 1000000;
-            //hashCount = 100;
+            int threadCount = 25;
+
             Stopwatch stopwatch = new Stopwatch();
 
             // Create Connection String
@@ -61,7 +62,6 @@ namespace P06_KAW_DataAccess.App1
             stopwatch.Start();
             // Begin Test
 
-            int threadCount = 25;
             List<Thread> threads = new List<Thread>();
             for (int i = 1; i < hashCount; i += hashCount/threadCount)
             {
