@@ -51,10 +51,10 @@ namespace P06_KAW_DataAccess.App2
             stat.LastTest = DateTime.Now;
             stopwatch.Start();
             var dataList = connection.Query<HashData>("SELECT * FROM hashes WHERE hash = @p", new { p = stat.Result }).ToList();
+            stopwatch.Stop();
             if (dataList.Count > 0)
             {
                 // Found Match in Rainbow Table
-                stopwatch.Stop();
                 stat.Found = true;
                 Console.WriteLine("Found value in Lookup Table!");
                 stat.LookupTime = Convert.ToInt32(stopwatch.Elapsed.TotalMilliseconds);
